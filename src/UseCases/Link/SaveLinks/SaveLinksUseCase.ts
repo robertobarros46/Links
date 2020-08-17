@@ -1,9 +1,10 @@
 import { ILinkRepository } from "../../../repositories/ILinkRepository";
 import { ISaveLinkRequestDTO } from "./SaveLinkDTO";
 import { Link } from "../../../entities/Links";
-import api from "../../../client/api";
 import validateUrl from "valid-url";
-import cheerio from "cheerio";
+import puppeteer from "puppeteer";
+
+let linksStatus = {};
 
 export class SaveLinksUseCase {
   constructor(private linksRepository: ILinkRepository) {}
@@ -15,16 +16,23 @@ export class SaveLinksUseCase {
       return links;
     }
 
-    const resp = await api.get(url);
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.goto(url);
 
-    const html = resp.data;
-    const $ = cheerio.load(html);
-    const linkObjects = $("a");
-    const total = linkObjects.length;
+    const linkHrefs = await page.evaluate(() => {
+      const results = [];
+      let aLinks = document.querySelectorAll("a");
+      let links = document.querySelectorAll("link");
+      aLinks.forEach((alink) => results.push(alink.href));
+      links.forEach((link) => results.push(link.href));
+      return results;
+    });
 
-    for (let i = 0; i < total; i++) {
-      const url = linkObjects[i].attribs.href;
-      if (validateUrl.isUri(url)) {
+    for (let i = 0; i < linkHrefs.length; i++) {
+      const url = linkHrefs[i];
+      if (validateUrl.isUri(url) && !linksStatus[url]) {
+        linksStatus[url] = true;
         const linksLvl = await this.saveLinks(url, level - 1);
         links.push({
           url: url,
@@ -34,27 +42,6 @@ export class SaveLinksUseCase {
       }
     }
 
-    /**
-     * If you want to make async and give a optimistic feedback to the customer we can use this approach
-     */
-    // api.get(url).then((resp) => {
-    //   const html = resp.data;
-    //   const $ = cheerio.load(html);
-    //   const linkObjects = $("a");
-    //   const total = linkObjects.length;
-
-    //   for (let i = 0; i < total; i++) {
-    //     const url = linkObjects[i].attribs.href;
-    //     if (validateUrl.isUri(url)) {
-    //       const linksLvl = this.saveLinks(url, level - 1);
-    //       links.push({
-    //         url: url,
-    //         level: level,
-    //         links: linksLvl,
-    //       });
-    //     }
-    //   }
-    // });
     return links;
   }
 
@@ -76,5 +63,7 @@ export class SaveLinksUseCase {
     const link = new Link({ url, level, links });
 
     await this.linksRepository.save(link);
+
+    linksStatus = {};
   }
 }

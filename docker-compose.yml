@@ -1,0 +1,31 @@
+version: "3"
+services:
+  links-app:
+    container_name: links-app
+    restart: always
+    build: .
+    depends_on:
+      - mongo-links
+    ports:
+      - "3333:3333"
+    links:
+      - mongo-links
+    networks:
+      - app-connect
+
+  mongo-links:
+    container_name: mongo-links
+    image: mongo
+    volumes:
+      - mongo-links-data:/data
+    ports:
+      - "27017:27017"
+    networks:
+      - app-connect
+
+volumes:
+  mongo-links-data:
+
+networks:
+  app-connect:
+    driver: bridge

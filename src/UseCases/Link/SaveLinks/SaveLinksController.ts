@@ -13,7 +13,9 @@ export class SaveLinksController {
         level,
       });
 
-      return response.status(201).send();
+      return response.status(201).json({
+        message: "Links crawled with success",
+      });
     } catch (err) {
       return response.status(400).json({
         message: err.message || "Unexpected error.",
