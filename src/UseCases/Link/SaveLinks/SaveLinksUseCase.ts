@@ -5,6 +5,8 @@ import api from "../../../client/api";
 import validateUrl from "valid-url";
 import cheerio from "cheerio";
 
+let linksStatus = {};
+
 export class SaveLinksUseCase {
   constructor(private linksRepository: ILinkRepository) {}
 
@@ -24,7 +26,8 @@ export class SaveLinksUseCase {
 
     for (let i = 0; i < total; i++) {
       const url = linkObjects[i].attribs.href;
-      if (validateUrl.isUri(url)) {
+      if (validateUrl.isUri(url) && !linksStatus[url]) {
+        linksStatus[url] = true;
         const linksLvl = await this.saveLinks(url, level - 1);
         links.push({
           url: url,
@@ -76,5 +79,7 @@ export class SaveLinksUseCase {
     const link = new Link({ url, level, links });
 
     await this.linksRepository.save(link);
+
+    linksStatus = {};
   }
 }
