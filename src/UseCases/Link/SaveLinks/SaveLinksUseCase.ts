@@ -1,16 +1,14 @@
-import { ILinkRepository } from "../../../repositories/ILinkRepository";
 import { ISaveLinkRequestDTO } from "./SaveLinkDTO";
-import { Link } from "../../../entities/Links";
 import validateUrl from "valid-url";
 import puppeteer from "puppeteer";
+import { ILinkSchema } from "../../../schemas/ILinkSchema";
+import Link from "../../../schemas/implementations/Link";
 
 let linksStatus = {};
 
 export class SaveLinksUseCase {
-  constructor(private linksRepository: ILinkRepository) {}
-
-  async saveLinks(url: string, level: number): Promise<Link[]> {
-    const links: Link[] = [];
+  async saveLinks(url: string, level: number): Promise<ILinkSchema[]> {
+    const links: ILinkSchema[] = [];
 
     if (level === 0) {
       return links;
@@ -34,7 +32,7 @@ export class SaveLinksUseCase {
       if (validateUrl.isUri(url) && !linksStatus[url]) {
         linksStatus[url] = true;
         const linksLvl = await this.saveLinks(url, level - 1);
-        links.push({
+        links.push(<ILinkSchema>{
           url: url,
           level: level,
           links: linksLvl,
@@ -52,7 +50,7 @@ export class SaveLinksUseCase {
       );
     }
 
-    const linkAlreadyExists = await this.linksRepository.findLinkByUrl(url);
+    const linkAlreadyExists = await Link.findOne({ url: url });
 
     if (linkAlreadyExists) {
       throw new Error("URL already searched!");
@@ -60,9 +58,9 @@ export class SaveLinksUseCase {
 
     const links = await this.saveLinks(url, level);
 
-    const link = new Link({ url, level, links });
+    const link = <ILinkSchema>{ url, level, links };
 
-    await this.linksRepository.save(link);
+    await Link.create(link);
 
     linksStatus = {};
   }

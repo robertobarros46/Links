@@ -1,10 +1,8 @@
-import { ILinkRepository } from "../../../repositories/ILinkRepository";
+import Link from "../../../schemas/implementations/Link";
 
 export class GetLinksUseCase {
-  constructor(private usersRepository: ILinkRepository) {}
-
   async execute() {
-    const link = await this.usersRepository.findAll();
+    const link = await Link.find();
     return link;
   }
 }

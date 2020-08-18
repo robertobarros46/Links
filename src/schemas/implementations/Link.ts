@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { ILinkSchema } from "./ILinkSchema";
+import { ILinkSchema } from "../ILinkSchema";
 
 const LinkSchema: Schema = new Schema({
   url: { type: String, required: true },
