@@ -6,6 +6,8 @@ import puppeteer from "puppeteer";
 
 let linksStatus = {};
 
+let linksStatus = {};
+
 export class SaveLinksUseCase {
   constructor(private linksRepository: ILinkRepository) {}
 

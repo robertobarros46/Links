@@ -1,10 +1,15 @@
 # Links crawler
 
+<<<<<<< HEAD
 Links crawler is a application that uses node with typescript, some commons libraries as express, puppeteer and mongoose, and is used to extract links from a web site.
+=======
+Links crawler is a application that uses node with typescript, some commons libraries as express, cheerio and axios, and is used to extract links from a web site.
+>>>>>>> dd52a241b449151bcd4d3caf6235d622d603a4ca
 
 ## Prerequistes
 
 - Clone the project from git@github.com:robertobarros46/Links.git or https://github.com/robertobarros46/Links.git.
+<<<<<<< HEAD
 - Make sure to add the mongo url into .env file.
 
 - - Running manually
@@ -18,6 +23,8 @@ mongodb://localhost:27017/links
 ```bash
 mongodb://mongo-links:27017/links
 ```
+=======
+>>>>>>> dd52a241b449151bcd4d3caf6235d622d603a4ca
 
 ### Running manually
 
