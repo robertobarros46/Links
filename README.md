@@ -5,6 +5,7 @@ Links crawler is a application that uses node with typescript, some commons libr
 ## Prerequistes
 
 - Clone the project from git@github.com:robertobarros46/Links.git or https://github.com/robertobarros46/Links.git.
+
 - Make sure to add the mongo url into .env file.
 
 - - Running manually
