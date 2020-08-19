@@ -1,6 +1,6 @@
 # Links crawler
 
-Links crawler is a application that uses node with typescript, some commons libraries as express, puppeteer and mongoose, and is used to extract links from a web site.
+Links crawler is a application that uses node with typescript, some commons libraries as express, puppeteer and mongoose, and is used to extract links from a web site from the first link to the level set in the request.
 
 ## Prerequistes
 
@@ -8,17 +8,9 @@ Links crawler is a application that uses node with typescript, some commons libr
 
 - Make sure to add the mongo url into .env file.
 
-- - Running manually
+  - Running manually: `mongodb://localhost:27017/links`
 
-```bash
-mongodb://localhost:27017/links
-```
-
-- - Running with docker
-
-```bash
-mongodb://mongo-links:27017/links
-```
+  - Running with docker: `mongodb://mongo-links:27017/links`
 
 ### Running manually
 
@@ -47,31 +39,31 @@ You can run this command with a -d trim the output and unblock the command line.
 
 You can use a application such as Insomnia or Postman to make requests to the application endpoints.
 
-- GET Request
+- GET Request &#8594; Get all links crawled stored in database
 
 ```bash
 /links
 ```
 
-Response:
+**Response:**
 
 ```json
 [
   {
     "url": "https://google.com",
-    "level": 2,
+    "level": 1,
     "links": []
   }
 ]
 ```
 
-- POST Request -> The body is composed with the url to be crawled and how much deeper is the level that the user wants to search for links.
+- POST Request &#8594; The body is composed with the url to be crawled and how much deeper is the level that the user wants to search for links (It will search for links inside of the link crawled going until the level set in request).
 
 ```bash
 /links
 ```
 
-Body:
+**Body:**
 
 ```json
 {
@@ -80,7 +72,7 @@ Body:
 }
 ```
 
-Response:
+**Response:**
 
 ```json
 {
