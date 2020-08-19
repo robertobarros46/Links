@@ -1,7 +1,7 @@
 {
   "name": "links",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.ts",
   "author": "Roberto de Barros Netto <roberto.netto@gec.inatel.br>",
   "license": "MIT",
   "scripts": {
